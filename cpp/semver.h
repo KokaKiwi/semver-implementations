@@ -1,7 +1,7 @@
 #ifndef SEMVER_H_
 #define SEMVER_H_
 
-#include <exception>
+#include <stdexcept>
 #include <string>
 
 class SemVersion
@@ -9,20 +9,20 @@ class SemVersion
 public:
     SemVersion(int, int, int);
     SemVersion(int, int, int, const char *, const char *);
-    SemVersion(int, int, int, std::string &, std::string &);
+    SemVersion(int, int, int, const std::string &, const std::string &);
     SemVersion(const char *);
-    SemVersion(std::string &);
+    SemVersion(const std::string &);
 
-    bool operator==(SemVersion &);
-    bool operator>(SemVersion &);
+    bool operator==(const SemVersion &) const;
+    bool operator>(const SemVersion &) const;
 
     void set(int, int, int);
     void set(int, int, int, const char *, const char *);
-    void set(int, int, int, std::string &, std::string &);
+    void set(int, int, int, const std::string &, const std::string &);
     void set(const char *);
-    void set(std::string &);
+    void set(const std::string &);
 
-    std::string str(void);
+    std::string str(void) const;
 
     int major;
     int minor;
@@ -31,12 +31,10 @@ public:
     std::string build;
 };
 
-class bad_format_exception: public std::exception
+class bad_format_exception: public std::runtime_error
 {
-    virtual const char *what() const throw()
-    {
-        return "Bad version format.";
-    }
+public:
+    bad_format_exception(void): std::runtime_error("Bad version format.") {};
 };
 
 #endif /* SEMVER_H_ */

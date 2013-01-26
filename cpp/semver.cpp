@@ -13,7 +13,7 @@ SemVersion::SemVersion(int major, int minor, int patch, const char *pre_release,
     this->set(major, minor, patch, pre_release, build);
 }
 
-SemVersion::SemVersion(int major, int minor, int patch, std::string &pre_release, std::string &build)
+SemVersion::SemVersion(int major, int minor, int patch, const std::string &pre_release, const std::string &build)
 {
     this->set(major, minor, patch, pre_release, build);
 }
@@ -23,17 +23,17 @@ SemVersion::SemVersion(const char *version)
     this->set(version);
 }
 
-SemVersion::SemVersion(std::string &version)
+SemVersion::SemVersion(const std::string &version)
 {
     this->set(version);
 }
 
-bool SemVersion::operator==(SemVersion &other)
+bool SemVersion::operator==(const SemVersion &other) const
 {
     return (this->str() == other.str());
 }
 
-bool SemVersion::operator>(SemVersion &other)
+bool SemVersion::operator>(const SemVersion &other) const
 {
     if (this->major > other.major)
     {
@@ -81,7 +81,7 @@ void SemVersion::set(int major, int minor, int patch, const char *pre_release, c
     this->build = std::string(build);
 }
 
-void SemVersion::set(int major, int minor, int patch, std::string &pre_release, std::string &build)
+void SemVersion::set(int major, int minor, int patch, const std::string &pre_release, const std::string &build)
 {
     this->set(major, minor, patch);
     this->pre_release = std::string(pre_release);
@@ -95,7 +95,7 @@ void SemVersion::set(const char *version)
     this->set(strVersion);
 }
 
-void SemVersion::set(std::string &version)
+void SemVersion::set(const std::string &version)
 {
     unsigned int firstDotPos;
     unsigned int secondDotPos;
@@ -145,7 +145,7 @@ void SemVersion::set(std::string &version)
     }
 }
 
-std::string SemVersion::str()
+std::string SemVersion::str() const
 {
     std::ostringstream stream;
 
