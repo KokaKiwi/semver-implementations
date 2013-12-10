@@ -3,17 +3,17 @@
 #include <sstream>
 #include "semver.h"
 
-SemVersion::SemVersion(int major, int minor, int patch)
+SemVersion::SemVersion(uint major, uint minor, uint patch)
 {
     this->set(major, minor, patch);
 }
 
-SemVersion::SemVersion(int major, int minor, int patch, const char *pre_release, const char *build)
+SemVersion::SemVersion(uint major, uint minor, uint patch, const char *pre_release, const char *build)
 {
     this->set(major, minor, patch, pre_release, build);
 }
 
-SemVersion::SemVersion(int major, int minor, int patch, const std::string &pre_release, const std::string &build)
+SemVersion::SemVersion(uint major, uint minor, uint patch, const std::string &pre_release, const std::string &build)
 {
     this->set(major, minor, patch, pre_release, build);
 }
@@ -65,7 +65,7 @@ bool SemVersion::operator>(const SemVersion &other) const
     return false;
 }
 
-void SemVersion::set(int major, int minor, int patch)
+void SemVersion::set(uint major, uint minor, uint patch)
 {
     this->major = major;
     this->minor = minor;
@@ -74,14 +74,14 @@ void SemVersion::set(int major, int minor, int patch)
     this->build = std::string();
 }
 
-void SemVersion::set(int major, int minor, int patch, const char *pre_release, const char *build)
+void SemVersion::set(uint major, uint minor, uint patch, const char *pre_release, const char *build)
 {
     this->set(major, minor, patch);
     this->pre_release = std::string(pre_release);
     this->build = std::string(build);
 }
 
-void SemVersion::set(int major, int minor, int patch, const std::string &pre_release, const std::string &build)
+void SemVersion::set(uint major, uint minor, uint patch, const std::string &pre_release, const std::string &build)
 {
     this->set(major, minor, patch);
     this->pre_release = std::string(pre_release);

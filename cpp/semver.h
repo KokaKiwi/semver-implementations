@@ -4,29 +4,31 @@
 #include <stdexcept>
 #include <string>
 
+typedef unsigned int uint;
+
 class SemVersion
 {
 public:
-    SemVersion(int, int, int);
-    SemVersion(int, int, int, const char *, const char *);
-    SemVersion(int, int, int, const std::string &, const std::string &);
+    SemVersion(uint, uint, uint);
+    SemVersion(uint, uint, uint, const char *, const char *);
+    SemVersion(uint, uint, uint, const std::string &, const std::string &);
     SemVersion(const char *);
     SemVersion(const std::string &);
 
     bool operator==(const SemVersion &) const;
     bool operator>(const SemVersion &) const;
 
-    void set(int, int, int);
-    void set(int, int, int, const char *, const char *);
-    void set(int, int, int, const std::string &, const std::string &);
+    void set(uint, uint, uint);
+    void set(uint, uint, uint, const char *, const char *);
+    void set(uint, uint, uint, const std::string &, const std::string &);
     void set(const char *);
     void set(const std::string &);
 
     std::string str(void) const;
 
-    int major;
-    int minor;
-    int patch;
+    uint major;
+    uint minor;
+    uint patch;
     std::string pre_release;
     std::string build;
 };
