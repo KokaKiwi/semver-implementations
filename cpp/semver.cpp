@@ -97,51 +97,37 @@ void SemVersion::set(const char *version)
 
 void SemVersion::set(const std::string &version)
 {
-    unsigned int firstDotPos;
-    unsigned int secondDotPos;
-    unsigned int dashPos;
-    unsigned int plusPos;
+    // regex to capture semantic version
+    // the regex matches case insensitive
+    // (1) major version 0 or unlimited number
+    // (2) . minor version (0 or unlimited number)
+    // (3) . patch version (0 or unlimited number)
+    // (4) optional pre-release following a dash consisting of a alphanumeric letters
+    //     and hyphens using a non-capture subclause to exclude the dash from the 
+    //     pre-release string
+    // (5) optional build following a plus consisting of alphanumeric letters and
+    //     hyphens using a non-capture subclause to exclude the plus from the build string
+    auto semver_regex = std::regex("^(0|[1-9][0-9]*)"   // (1)
+                                   "\\.(0|[1-9][0-9]*)" // (2)
+                                   "\\.(0|[1-9][0-9]*)" // (3)
+                                   "(?:\\-([0-9a-z-]+[\\.0-9a-z-]*))?" // (4)
+                                   "(?:\\+([0-9a-z-]+[\\.0-9a-z-]*))?" // (5)
+                                   ,
+                                   std::regex_constants::ECMAScript |
+                                   std::regex_constants::icase);
 
-    firstDotPos = version.find('.');
-    secondDotPos = version.find('.', firstDotPos + 1);
-    dashPos = version.find('-', secondDotPos + 1);
-    plusPos = version.find('+', secondDotPos + 1);
-
-    if (firstDotPos == -1 || secondDotPos == -1)
+    auto pieces_match = std::smatch();
+    if(std::regex_match(version, pieces_match, semver_regex))
     {
-        throw bad_format_exception();
-    }
-
-    this->major = std::atoi(version.substr(0, firstDotPos).c_str());
-    this->minor = std::atoi(version.substr(firstDotPos + 1, secondDotPos - firstDotPos).c_str());
-    if (dashPos == -1 && plusPos == -1)
-    {
-        this->patch = std::atoi(version.substr(secondDotPos + 1).c_str());
-        this->pre_release = std::string();
-        this->build = std::string();
-    }
-    else if (plusPos == -1)
-    {
-        this->patch = std::atoi(version.substr(secondDotPos + 1, dashPos - secondDotPos).c_str());
-        this->pre_release = std::string(version.substr(dashPos + 1));
-        this->build = std::string();
-    }
-    else if (dashPos == -1)
-    {
-        this->patch = std::atoi(version.substr(secondDotPos + 1, plusPos - secondDotPos).c_str());
-        this->pre_release = std::string();
-        this->build = std::string(version.substr(plusPos + 1));
+      set(std::atoi(pieces_match[1].str().c_str()),
+          std::atoi(pieces_match[2].str().c_str()),
+          std::atoi(pieces_match[3].str().c_str()),
+          pieces_match[4],
+          pieces_match[5]);
     }
     else
     {
-        if (plusPos < dashPos)
-        {
-            throw bad_format_exception();
-        }
-
-        this->patch = std::atoi(version.substr(secondDotPos + 1, dashPos - secondDotPos).c_str());
-        this->pre_release = std::string(version.substr(dashPos + 1, plusPos - dashPos));
-        this->build = std::string(version.substr(plusPos));
+      throw bad_format_exception();
     }
 }
 
