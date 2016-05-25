@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <string>
 #include <sstream>
+#include <regex>
 #include "semver.h"
 
 SemVersion::SemVersion(uint major, uint minor, uint patch)
